@@ -9,7 +9,6 @@ describe Light::Model do
   before(:each) { @subject = TestClass.new(test_data) }
 
   describe 'initialize' do
-
     it 'fillfull instance' do
       @subject.name.should   eq test_data[:name]
       @subject.email.should  eq test_data[:email]
@@ -33,7 +32,7 @@ describe Light::Model do
       [
         TestClass.new(test_data) == TestClass.new(test_data),
         TestClass.new(test_data).eql?(TestClass.new(test_data))
-      ].all?.should be_true
+      ].all?.should eq(true)
     end
   end
 
@@ -43,7 +42,7 @@ describe Light::Model do
     end
 
     it 'with options' do
-      hash = {'name' => 'Pawel'}
+      hash = { 'name' => 'Pawel' }
       @subject.as_json(only: :name).should eq hash.stringify_keys
     end
   end
@@ -54,7 +53,7 @@ describe Light::Model do
     end
 
     it 'with options' do
-      hash = {'name' => 'Pawel'}
+      hash = { 'name' => 'Pawel' }
       @subject.to_json(only: :name).should eq hash.to_json
     end
   end

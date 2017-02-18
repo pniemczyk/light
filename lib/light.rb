@@ -1,5 +1,5 @@
-require "light/version"
-require "light/model"
+require 'light/version'
+require 'light/model'
 
 module Light
   # Your code goes here...

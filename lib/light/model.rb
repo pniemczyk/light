@@ -1,3 +1,4 @@
+require 'active_model'
 module Light
   class Model
     include ActiveModel::Serialization
@@ -11,7 +12,7 @@ module Light
     class << self
       def attributes(*attrs)
         attrs.each do |attr|
-          self.send(:attr_accessor, attr)
+          send(:attr_accessor, attr)
         end
         @__attributes = (@__attributes || []) + attrs
       end
@@ -19,28 +20,29 @@ module Light
 
     def equality_state
       self.class.instance_variable_get(:@__attributes).map do |attr|
-        public_send("#{attr}")
+        public_send(attr.to_s)
       end
     end
 
-    def ==(o)
-      o.class == self.class && o.equality_state == equality_state
+    def ==(other)
+      other.class == self.class && other.equality_state == equality_state
     end
 
-    alias_method :eql?, :==
+    alias eql? ==
 
     def hash
       equality_state.hash
     end
 
-    def initialize(params={})
+    def initialize(params = {})
+      return unless params
       params.each do |attr, value|
-        self.public_send("#{attr}=", value)
-      end if params
+        public_send("#{attr}=", value)
+      end
     end
 
-    def to_h(opts=nil)
-      self.serializable_hash(opts)
+    def to_h(opts = nil)
+      serializable_hash(opts)
     end
 
     def persisted?
