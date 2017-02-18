@@ -4,7 +4,7 @@ When you need all functionalities of ActiveRecord model but for other purposes t
 
 ## Examples:
 
-```
+```ruby
 require 'light'
 class Person < Light::Model
   attributes :name, :email
