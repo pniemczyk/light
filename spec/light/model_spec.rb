@@ -8,7 +8,7 @@ describe Light::Model do
   let(:test_data) { {name: 'Pawel', email: 'pniemczyk@o2.pl', bucket: { test_key: 'stuff'}} }
   before(:each) { @subject = TestClass.new(test_data) }
 
-  describe 'initialize' do
+  context 'initialize' do
     it 'fillfull instance' do
       @subject.name.should   eq test_data[:name]
       @subject.email.should  eq test_data[:email]
@@ -16,7 +16,7 @@ describe Light::Model do
     end
   end
 
-  describe '#to_h' do
+  context '#to_h' do
     it 'default' do
       @subject.to_h.symbolize_keys.should eq test_data
     end
@@ -27,7 +27,7 @@ describe Light::Model do
     end
   end
 
-  describe 'equality' do
+  context 'equality' do
     it 'two instance with same data should be eq' do
       [
         TestClass.new(test_data) == TestClass.new(test_data),
@@ -36,7 +36,7 @@ describe Light::Model do
     end
   end
 
-  describe '#as_json' do
+  context '#as_json' do
     it 'default' do
       @subject.as_json.should eq test_data.stringify_keys
     end
@@ -47,7 +47,7 @@ describe Light::Model do
     end
   end
 
-  describe '#to_json' do
+  context '#to_json' do
     it 'default' do
       @subject.to_json.should eq test_data.to_json
     end
@@ -55,6 +55,24 @@ describe Light::Model do
     it 'with options' do
       hash = { 'name' => 'Pawel' }
       @subject.to_json(only: :name).should eq hash.to_json
+    end
+  end
+
+  context '#persisted?' do
+    it 'by default returns false' do
+      @subject.persisted?.should eq false
+    end
+
+    context 'when persisted_via_attr is setup' do
+      before { @subject.class.persisted_via_attr :name }
+      it 'returns true when attr value present' do
+        @subject.persisted?.should eq true
+      end
+
+      it 'returns false when attr value is blank' do
+        @subject.name = nil
+        @subject.persisted?.should eq false
+      end
     end
   end
 end

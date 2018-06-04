@@ -16,6 +16,10 @@ module Light
         end
         @__attributes = (@__attributes || []) + attrs
       end
+
+      def persisted_via_attr(attr_name)
+        @__persisted_via_attr = attr_name
+      end
     end
 
     def equality_state
@@ -46,7 +50,10 @@ module Light
     end
 
     def persisted?
-      false
+      attr_name = self.class.instance_variable_get(:@__persisted_via_attr)
+      return false if attr_name.nil?
+      value = send(attr_name)
+      !(value.respond_to?(:empty?) ? !!value.empty? : !value)
     end
 
     private
